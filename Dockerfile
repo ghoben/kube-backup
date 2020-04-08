@@ -29,7 +29,13 @@ RUN curl -SL ${KUBECTL_URI} -o kubectl && chmod +x kubectl
 
 RUN echo "${KUBECTL_SHA256}  kubectl" | sha256sum -c - || exit 10
 ENV PATH="/:${PATH}"
+ENV GPGHOME="/backup/.gnugpg" 
 
+COPY job-cleanup.sh /
 COPY entrypoint.sh /
+COPY gpg.conf /
+
+RUN chmod +x /job-cleanup.sh /entrypoint.sh 
+
 USER backup
 ENTRYPOINT ["/entrypoint.sh"]
